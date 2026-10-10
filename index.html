@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Income Allocation Calculator</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 14px;
+      background: #f3f6fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: auto;
+    }
+
+    header {
+      background: #142c4e;
+      color: white;
+      padding: 28px 24px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+    }
+
+    header h1 { margin: 0 0 10px; font-size: 27px; }
+    header p { margin: 0; color: #d9e5f5; line-height: 1.6; }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 18px #1720330c;
+    }
+
+    h2 { font-size: 19px; margin: 0 0 18px; }
+
+    .income-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid #d7dfeb;
+      border-radius: 9px;
+      font-size: 16px;
+      background: white;
+      color: #172033;
+    }
+
+    input:focus {
+      outline: 2px solid #8cb8ff;
+      border-color: #3277d3;
+    }
+
+    .total {
+      background: #eaf2ff;
+      padding: 17px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .total strong { font-size: 24px; color: #174e9a; }
+
+    .allocation {
+      border: 1px solid #e4e9f1;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 13px;
+    }
+
+    .allocation-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 13px;
+    }
+
+    .allocation-top label { margin: 0; font-size: 15px; }
+    .percentage { max-width: 100px; text-align: right; }
+
+    .amount {
+      font-size: 25px;
+      font-weight: 700;
+      margin: 10px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .green { color: #21834b; }
+    .blue { color: #2469c5; }
+    .orange { color: #b96a10; }
+
+    .bar {
+      height: 9px;
+      background: #edf0f5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width .2s;
+    }
+
+    .status {
+      padding: 12px;
+      border-radius: 9px;
+      background: #f1f5fa;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .error { color: #b42318; background: #fff0ef; }
+    .success { color: #187443; background: #eaf8ef; }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .reset { background: #e8edf5; color: #172033; }
+    .print { background: #142c4e; color: white; margin-right: 8px; }
+    .note { color: #657187; font-size: 12px; line-height: 1.6; }
+
+    @media (max-width: 480px) {
+      .income-row { grid-template-columns: 1fr; }
+      header h1 { font-size: 23px; }
+      .card { padding: 17px; }
+      .amount { font-size: 22px; }
+    }
+
+    @media print {
+      body { background: white; }
+      .card, header { box-shadow: none; border: 1px solid #ddd; }
+      .buttons { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <header>
+      <h1>My Income Allocation Calculator</h1>
+      <p>Manage your income with purpose. Allocate your money
+      to giving, business growth, and family needs.</p>
+    </header>
+
+    <section class="card">
+      <h2>1. Enter Your Income (PKR)</h2>
+
+      <div class="income-row">
+        <div>
+          <label for="salary">Salary / Job Income</label>
+          <input id="salary" type="number" min="0" step="any"
+                 placeholder="0" value="0">
+        </div>
+        <div>
+          <label for="ebay">eBay / Online Business</label>
+          <input id="ebay" type="number" min="0" step="any"
+                 placeholder="0" value="0">
+        </div>
+      </div>
+
+      <div class="income-row">
+        <div>
+          <label for="teaching">Teaching / Academy</label>
+          <input id="teaching" type="number" min="0" step="any"
+                 placeholder="0" value="0">
+        </div>
+        <div>
+          <label for="other">Other Income</label>
+          <input id="other" type="number" min="0" step="any"
+                 placeholder="0" value="0">
+        </div>
+      </div>
+
+      <div class="total">
+        <span>Total Monthly Income</span>
+        <strong id="totalIncome">PKR 0</strong>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. Set Your Allocation Percentages</h2>
+
+      <div class="status" id="status" aria-live="polite">
+        Your allocation percentages must total 100%.
+      </div>
+
+      <div class="allocation">
+        <div class="allocation-top">
+          <label for="allahPct">1. Investment in Allah</label>
+          <input class="percentage" id="allahPct" type="number"
+                 min="0" max="100" step="any" value="33.33"
+                 aria-label="Investment in Allah percentage">
+        </div>
+        <div class="amount green" id="allahAmount">PKR 0</div>
+        <div class="bar">
+          <div class="bar-fill" id="allahBar" style="background:#29985a"></div>
+        </div>
+      </div>
+
+      <div class="allocation">
+        <div class="allocation-top">
+          <label for="businessPct">2. Business Investment</label>
+          <input class="percentage" id="businessPct" type="number"
+                 min="0" max="100" step="any" value="33.33"
+                 aria-label="Business investment percentage">
+        </div>
+        <div class="amount blue" id="businessAmount">PKR 0</div>
+        <div class="bar">
+          <div class="bar-fill" id="businessBar" style="background:#347ee0"></div>
+        </div>
+      </div>
+
+      <div class="allocation">
+        <div class="allocation-top">
+          <label for="familyPct">3. Family Expenses</label>
+          <input class="percentage" id="familyPct" type="number"
+                 min="0" max="100" step="any" value="33.34"
+                 aria-label="Family expenses percentage">
+        </div>
+        <div class="amount orange" id="familyAmount">PKR 0</div>
+        <div class="bar">
+          <div class="bar-fill" id="familyBar" style="background:#e9a23b"></div>
+        </div>
+      </div>
+
+      <div class="total">
+        <span>Total Allocated</span>
+        <strong id="allocatedTotal">PKR 0</strong>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3. Your Monthly Summary</h2>
+
+      <div class="total" style="margin-bottom:12px">
+        <span>Total Income</span>
+        <strong id="summaryIncome">PKR 0</strong>
+      </div>
+
+      <div class="total" style="margin-bottom:12px">
+        <span>Amount Allocated</span>
+        <strong id="summaryAllocated">PKR 0</strong>
+      </div>
+
+      <div class="total">
+        <span>Unallocated / Remaining</span>
+        <strong id="remaining">PKR 0</strong>
+      </div>
+
+      <p class="note">
+        Calculations are estimates based on the income and percentages
+        you enter. This page does not save your information to a server.
+      </p>
+
+      <div class="buttons">
+        <button class="print" onclick="window.print()">Print Summary</button>
+        <button class="reset" id="reset">Reset Calculator</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const incomeIds = ["salary", "ebay", "teaching", "other"];
+    const categories = [
+      { pct: "allahPct", amount: "allahAmount", bar: "allahBar" },
+      { pct: "businessPct", amount: "businessAmount", bar: "businessBar" },
+      { pct: "familyPct", amount: "familyAmount", bar: "familyBar" }
+    ];
+
+    const money = value => "PKR " + value.toLocaleString("en-PK", {
+      maximumFractionDigits: 2
+    });
+
+    function readNumber(id) {
+      const input = document.getElementById(id);
+      const value = Number(input.value);
+      return input.value.trim() !== "" && Number.isFinite(value)
+        ? value : 0;
+    }
+
+    function calculate() {
+      const invalidIncome = incomeIds.some(id => {
+        const input = document.getElementById(id);
+        return input.value.trim() !== "" &&
+          (!Number.isFinite(Number(input.value)) || Number(input.value) < 0);
+      });
+
+      const invalidPercent = categories.some(item => {
+        const input = document.getElementById(item.pct);
+        return input.value.trim() === "" ||
+          !Number.isFinite(Number(input.value)) ||
+          Number(input.value) < 0 || Number(input.value) > 100;
+      });
+
+      const income = incomeIds.reduce((sum, id) => sum + readNumber(id), 0);
+      const percentages = categories.map(item => readNumber(item.pct));
+      const percentTotal = percentages.reduce((a, b) => a + b, 0);
+
+      document.getElementById("totalIncome").textContent = money(income);
+      document.getElementById("summaryIncome").textContent = money(income);
+
+      const status = document.getElementById("status");
+      status.className = "status";
+
+      if (invalidIncome || invalidPercent) {
+        status.textContent =
+          "Please enter valid non-negative income values and percentages between 0 and 100.";
+        status.classList.add("error");
+      } else if (Math.abs(percentTotal - 100) > 0.000001) {
+        status.textContent =
+          "Your percentages total " + percentTotal.toFixed(2) +
+          "%. Adjust them until the total is exactly 100%.";
+        status.classList.add("error");
+      } else {
+        status.textContent = "Perfect! Your allocation totals 100%.";
+        status.classList.add("success");
+      }
+
+      let allocated = 0;
+
+      categories.forEach((item, index) => {
+        const valid = !invalidIncome && !invalidPercent &&
+          Math.abs(percentTotal - 100) <= 0.000001;
+        const amount = valid ? income * percentages[index] / 100 : 0;
+
+        allocated += amount;
+        document.getElementById(item.amount).textContent = money(amount);
+        document.getElementById(item.bar).style.width =
+          Math.min(100, Math.max(0, percentages[index])) + "%";
+      });
+
+      document.getElementById("allocatedTotal").textContent =
+        money(allocated);
+      document.getElementById("summaryAllocated").textContent =
+        money(allocated);
+      document.getElementById("remaining").textContent =
+        money(income - allocated);
+    }
+
+    [...incomeIds, ...categories.map(item => item.pct)].forEach(id => {
+      document.getElementById(id).addEventListener("input", calculate);
+    });
+
+    document.getElementById("reset").addEventListener("click", () => {
+      incomeIds.forEach(id => document.getElementById(id).value = 0);
+      document.getElementById("allahPct").value = 33.33;
+      document.getElementById("businessPct").value = 33.33;
+      document.getElementById("familyPct").value = 33.34;
+      calculate();
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
