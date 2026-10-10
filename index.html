@@ -2,387 +2,379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Income Allocation Calculator</title>
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 24px 14px;
-      background: #f3f6fb;
-      color: #172033;
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      max-width: 760px;
-      margin: auto;
-    }
-
-    header {
-      background: #142c4e;
-      color: white;
-      padding: 28px 24px;
-      border-radius: 18px;
-      margin-bottom: 20px;
-    }
-
-    header h1 { margin: 0 0 10px; font-size: 27px; }
-    header p { margin: 0; color: #d9e5f5; line-height: 1.6; }
-
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 18px #1720330c;
-    }
-
-    h2 { font-size: 19px; margin: 0 0 18px; }
-
-    .income-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 7px;
-    }
-
-    input {
-      width: 100%;
-      min-width: 0;
-      padding: 12px;
-      border: 1px solid #d7dfeb;
-      border-radius: 9px;
-      font-size: 16px;
-      background: white;
-      color: #172033;
-    }
-
-    input:focus {
-      outline: 2px solid #8cb8ff;
-      border-color: #3277d3;
-    }
-
-    .total {
-      background: #eaf2ff;
-      padding: 17px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .total strong { font-size: 24px; color: #174e9a; }
-
-    .allocation {
-      border: 1px solid #e4e9f1;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 13px;
-    }
-
-    .allocation-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 13px;
-    }
-
-    .allocation-top label { margin: 0; font-size: 15px; }
-    .percentage { max-width: 100px; text-align: right; }
-
-    .amount {
-      font-size: 25px;
-      font-weight: 700;
-      margin: 10px 0;
-      overflow-wrap: anywhere;
-    }
-
-    .green { color: #21834b; }
-    .blue { color: #2469c5; }
-    .orange { color: #b96a10; }
-
-    .bar {
-      height: 9px;
-      background: #edf0f5;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      width: 0%;
-      transition: width .2s;
-    }
-
-    .status {
-      padding: 12px;
-      border-radius: 9px;
-      background: #f1f5fa;
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 15px;
-    }
-
-    .error { color: #b42318; background: #fff0ef; }
-    .success { color: #187443; background: #eaf8ef; }
-
-    button {
-      border: 0;
-      border-radius: 9px;
-      padding: 13px 18px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .reset { background: #e8edf5; color: #172033; }
-    .print { background: #142c4e; color: white; margin-right: 8px; }
-    .note { color: #657187; font-size: 12px; line-height: 1.6; }
-
-    @media (max-width: 480px) {
-      .income-row { grid-template-columns: 1fr; }
-      header h1 { font-size: 23px; }
-      .card { padding: 17px; }
-      .amount { font-size: 22px; }
-    }
-
-    @media print {
-      body { background: white; }
-      .card, header { box-shadow: none; border: 1px solid #ddd; }
-      .buttons { display: none; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Income Management System</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px 12px;background:#f3f6fb;color:#172033;font-family:Arial,sans-serif}
+main{max-width:850px;margin:auto}
+header{background:#142c4e;color:white;padding:26px;border-radius:16px;margin-bottom:18px}
+header h1{margin:0 0 8px;font-size:26px}
+header p{color:#dce7f6;line-height:1.5;margin:0}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 3px 15px #1720330c}
+h2{font-size:19px;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field{margin-bottom:13px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
+input,select{width:100%;padding:12px;border:1px solid #d5ddea;border-radius:8px;font-size:15px;background:white;color:#172033}
+input:focus,select:focus{outline:2px solid #9dc4ff}
+button{padding:11px 15px;border:0;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px}
+.primary{background:#174f95;color:white}
+.secondary{background:#e8edf5;color:#172033}
+.green{color:#21834b}.blue{color:#2469c5}.orange{color:#b96a10}
+.total{padding:16px;background:#eaf2ff;border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.total strong{font-size:22px;color:#174e9a}
+.allocation{border:1px solid #e1e7ef;padding:14px;border-radius:10px;margin:12px 0}
+.allocrow{display:grid;grid-template-columns:1fr 100px;gap:12px;align-items:center}
+.allocrow label{font-size:14px}
+.amount{font-size:22px;font-weight:bold;margin:12px 0}
+.bar{height:8px;background:#edf0f5;border-radius:9px;overflow:hidden}
+.fill{height:100%;width:0%}
+.status{padding:12px;border-radius:8px;background:#f1f5fa;font-size:13px;line-height:1.5;margin:12px 0}
+.good{background:#eaf8ef;color:#187443}
+.bad{background:#fff0ef;color:#b42318}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid #e5eaf1;white-space:nowrap}
+th{background:#f4f7fb}
+.small{font-size:12px;color:#657187;line-height:1.6}
+@media(max-width:520px){.grid{grid-template-columns:1fr}header h1{font-size:22px}.card{padding:15px}.allocrow{grid-template-columns:1fr 90px}}
+@media print{.noprint{display:none}body{background:white}}
+</style>
 </head>
-
 <body>
-  <main class="container">
-    <header>
-      <h1>My Income Allocation Calculator</h1>
-      <p>Manage your income with purpose. Allocate your money
-      to giving, business growth, and family needs.</p>
-    </header>
+<main>
+<header>
+<h1>My Income Management System</h1>
+<p>Track your income, manage your bank accounts, and allocate money with purpose.</p>
+</header>
 
-    <section class="card">
-      <h2>1. Enter Your Income (PKR)</h2>
+<section class="card">
+<h2>1. Add Income</h2>
+<form id="incomeForm">
+<div class="grid">
+<div class="field">
+<label for="incomeDate">Income Date</label>
+<input id="incomeDate" type="date" required>
+</div>
+<div class="field">
+<label for="incomeType">Income Type</label>
+<select id="incomeType" required>
+<option value="eBay Business">eBay Business</option>
+<option value="Skillzhub">Skillzhub</option>
+<option value="Salary">Salary</option>
+<option value="Teaching / Academy">Teaching / Academy</option>
+<option value="Freelancing">Freelancing</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="field">
+<label for="bankAccount">Bank / Payment Account</label>
+<select id="bankAccount" required>
+<option value="Cash">Cash</option>
+<option value="Meezan Bank">Meezan Bank</option>
+<option value="HBL">HBL</option>
+<option value="UBL">UBL</option>
+<option value="Payoneer">Payoneer</option>
+<option value="SadaPay">SadaPay</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="field">
+<label for="incomeAmount">Amount (PKR)</label>
+<input id="incomeAmount" type="number" min="0.01" step="any" placeholder="e.g. 25000" required>
+</div>
+</div>
+<button class="primary" id="saveBtn" type="submit">Add Income</button>
+<button class="secondary" type="button" id="cancelEdit" hidden>Cancel Edit</button>
+</form>
+<div id="syncStatus" class="status">Google Sheets is not configured yet.</div>
+</section>
 
-      <div class="income-row">
-        <div>
-          <label for="salary">Salary / Job Income</label>
-          <input id="salary" type="number" min="0" step="any"
-                 placeholder="0" value="0">
-        </div>
-        <div>
-          <label for="ebay">eBay / Online Business</label>
-          <input id="ebay" type="number" min="0" step="any"
-                 placeholder="0" value="0">
-        </div>
-      </div>
+<section class="card">
+<h2>2. Income Summary</h2>
+<div class="total"><span>Total Income</span><strong id="totalIncome">PKR 0</strong></div>
+<p class="small">The total includes all income records saved in this browser.</p>
+</section>
 
-      <div class="income-row">
-        <div>
-          <label for="teaching">Teaching / Academy</label>
-          <input id="teaching" type="number" min="0" step="any"
-                 placeholder="0" value="0">
-        </div>
-        <div>
-          <label for="other">Other Income</label>
-          <input id="other" type="number" min="0" step="any"
-                 placeholder="0" value="0">
-        </div>
-      </div>
+<section class="card">
+<h2>3. Allocation Percentages</h2>
+<div id="allocationStatus" class="status">Your percentages must total 100%.</div>
 
-      <div class="total">
-        <span>Total Monthly Income</span>
-        <strong id="totalIncome">PKR 0</strong>
-      </div>
-    </section>
+<div class="allocation">
+<div class="allocrow">
+<label for="allahPct">Investment in Allah (%)</label>
+<input id="allahPct" type="number" min="0" max="100" step="any" value="33.33">
+</div>
+<div id="allahAmount" class="amount green">PKR 0</div>
+<div class="bar"><div id="allahBar" class="fill" style="background:#29985a"></div></div>
+</div>
 
-    <section class="card">
-      <h2>2. Set Your Allocation Percentages</h2>
+<div class="allocation">
+<div class="allocrow">
+<label for="businessPct">Business Investment (%)</label>
+<input id="businessPct" type="number" min="0" max="100" step="any" value="33.33">
+</div>
+<div id="businessAmount" class="amount blue">PKR 0</div>
+<div class="bar"><div id="businessBar" class="fill" style="background:#347ee0"></div></div>
+</div>
 
-      <div class="status" id="status" aria-live="polite">
-        Your allocation percentages must total 100%.
-      </div>
+<div class="allocation">
+<div class="allocrow">
+<label for="familyPct">Family Expenses (%)</label>
+<input id="familyPct" type="number" min="0" max="100" step="any" value="33.34">
+</div>
+<div id="familyAmount" class="amount orange">PKR 0</div>
+<div class="bar"><div id="familyBar" class="fill" style="background:#e9a23b"></div></div>
+</div>
+<div class="total"><span>Unallocated Amount</span><strong id="remaining">PKR 0</strong></div>
+<p class="small">Allocation is calculated from total recorded income. Changing the percentages will also update existing records in Google Sheets when syncing is configured.</p>
+</section>
 
-      <div class="allocation">
-        <div class="allocation-top">
-          <label for="allahPct">1. Investment in Allah</label>
-          <input class="percentage" id="allahPct" type="number"
-                 min="0" max="100" step="any" value="33.33"
-                 aria-label="Investment in Allah percentage">
-        </div>
-        <div class="amount green" id="allahAmount">PKR 0</div>
-        <div class="bar">
-          <div class="bar-fill" id="allahBar" style="background:#29985a"></div>
-        </div>
-      </div>
+<section class="card">
+<h2>4. Income History</h2>
+<div class="noprint">
+<button id="syncAll" class="primary" type="button">Sync All to Google Sheets</button>
+<button id="resetAll" class="secondary" type="button">Clear Browser Records</button>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Type</th><th>Account</th><th>Amount</th><th class="noprint">Action</th></tr></thead>
+<tbody id="history"></tbody>
+</table>
+</div>
+<p class="small">Editing a record and saving it sends the same record ID to Google Sheets, updating its row rather than creating a duplicate. Clearing browser records does not delete Google Sheet rows.</p>
+</section>
+</main>
 
-      <div class="allocation">
-        <div class="allocation-top">
-          <label for="businessPct">2. Business Investment</label>
-          <input class="percentage" id="businessPct" type="number"
-                 min="0" max="100" step="any" value="33.33"
-                 aria-label="Business investment percentage">
-        </div>
-        <div class="amount blue" id="businessAmount">PKR 0</div>
-        <div class="bar">
-          <div class="bar-fill" id="businessBar" style="background:#347ee0"></div>
-        </div>
-      </div>
+<script>
+const SHEETS_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const STORAGE_KEY = "incomeManagerRecordsV2";
+const DEFAULT_PCTS = [33.33, 33.33, 33.34];
 
-      <div class="allocation">
-        <div class="allocation-top">
-          <label for="familyPct">3. Family Expenses</label>
-          <input class="percentage" id="familyPct" type="number"
-                 min="0" max="100" step="any" value="33.34"
-                 aria-label="Family expenses percentage">
-        </div>
-        <div class="amount orange" id="familyAmount">PKR 0</div>
-        <div class="bar">
-          <div class="bar-fill" id="familyBar" style="background:#e9a23b"></div>
-        </div>
-      </div>
+let records = [];
+let editingId = null;
 
-      <div class="total">
-        <span>Total Allocated</span>
-        <strong id="allocatedTotal">PKR 0</strong>
-      </div>
-    </section>
+try {
+  records = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  if (!Array.isArray(records)) records = [];
+} catch {
+  records = [];
+}
 
-    <section class="card">
-      <h2>3. Your Monthly Summary</h2>
+const $ = id => document.getElementById(id);
+const money = n => "PKR " + Number(n).toLocaleString("en-PK", {
+  maximumFractionDigits: 2
+});
 
-      <div class="total" style="margin-bottom:12px">
-        <span>Total Income</span>
-        <strong id="summaryIncome">PKR 0</strong>
-      </div>
+function saveLocal() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
 
-      <div class="total" style="margin-bottom:12px">
-        <span>Amount Allocated</span>
-        <strong id="summaryAllocated">PKR 0</strong>
-      </div>
+function percentages() {
+  return ["allahPct", "businessPct", "familyPct"].map(id => {
+    const el = $(id);
+    return el.value.trim() === "" ? NaN : Number(el.value);
+  });
+}
 
-      <div class="total">
-        <span>Unallocated / Remaining</span>
-        <strong id="remaining">PKR 0</strong>
-      </div>
+function validPercentages() {
+  const p = percentages();
+  return p.every(n => Number.isFinite(n) && n >= 0 && n <= 100) &&
+    Math.abs(p.reduce((a,b) => a+b, 0) - 100) < 0.000001;
+}
 
-      <p class="note">
-        Calculations are estimates based on the income and percentages
-        you enter. This page does not save your information to a server.
-      </p>
+function totalIncome() {
+  return records.reduce((sum, r) => sum + Number(r.amount || 0), 0);
+}
 
-      <div class="buttons">
-        <button class="print" onclick="window.print()">Print Summary</button>
-        <button class="reset" id="reset">Reset Calculator</button>
-      </div>
-    </section>
-  </main>
+function render() {
+  const total = totalIncome();
+  const p = percentages();
+  const valid = validPercentages();
 
-  <script>
-    const incomeIds = ["salary", "ebay", "teaching", "other"];
-    const categories = [
-      { pct: "allahPct", amount: "allahAmount", bar: "allahBar" },
-      { pct: "businessPct", amount: "businessAmount", bar: "businessBar" },
-      { pct: "familyPct", amount: "familyAmount", bar: "familyBar" }
-    ];
+  $("totalIncome").textContent = money(total);
 
-    const money = value => "PKR " + value.toLocaleString("en-PK", {
-      maximumFractionDigits: 2
-    });
+  const names = ["allahAmount", "businessAmount", "familyAmount"];
+  const bars = ["allahBar", "businessBar", "familyBar"];
+  let allocated = 0;
 
-    function readNumber(id) {
-      const input = document.getElementById(id);
-      const value = Number(input.value);
-      return input.value.trim() !== "" && Number.isFinite(value)
-        ? value : 0;
-    }
+  p.forEach((pct, i) => {
+    const amount = valid ? total * pct / 100 : 0;
+    allocated += amount;
+    $(names[i]).textContent = money(amount);
+    $(bars[i]).style.width =
+      Number.isFinite(pct) ? Math.max(0, Math.min(100, pct)) + "%" : "0%";
+  });
 
-    function calculate() {
-      const invalidIncome = incomeIds.some(id => {
-        const input = document.getElementById(id);
-        return input.value.trim() !== "" &&
-          (!Number.isFinite(Number(input.value)) || Number(input.value) < 0);
+  $("remaining").textContent = money(valid ? total - allocated : total);
+
+  $("allocationStatus").className = "status " + (valid ? "good" : "bad");
+  $("allocationStatus").textContent = valid
+    ? "Your allocation totals 100%."
+    : "Please set valid percentages that total exactly 100% before syncing.";
+
+  $("history").innerHTML = "";
+
+  if (!records.length) {
+    $("history").innerHTML =
+      '<tr><td colspan="5">No income records yet. Add your first income above.</td></tr>';
+  } else {
+    records.slice().sort((a,b) => b.date.localeCompare(a.date)).forEach(r => {
+      const tr = document.createElement("tr");
+      [r.date, r.type, r.bank, money(r.amount)].forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
       });
 
-      const invalidPercent = categories.some(item => {
-        const input = document.getElementById(item.pct);
-        return input.value.trim() === "" ||
-          !Number.isFinite(Number(input.value)) ||
-          Number(input.value) < 0 || Number(input.value) > 100;
-      });
-
-      const income = incomeIds.reduce((sum, id) => sum + readNumber(id), 0);
-      const percentages = categories.map(item => readNumber(item.pct));
-      const percentTotal = percentages.reduce((a, b) => a + b, 0);
-
-      document.getElementById("totalIncome").textContent = money(income);
-      document.getElementById("summaryIncome").textContent = money(income);
-
-      const status = document.getElementById("status");
-      status.className = "status";
-
-      if (invalidIncome || invalidPercent) {
-        status.textContent =
-          "Please enter valid non-negative income values and percentages between 0 and 100.";
-        status.classList.add("error");
-      } else if (Math.abs(percentTotal - 100) > 0.000001) {
-        status.textContent =
-          "Your percentages total " + percentTotal.toFixed(2) +
-          "%. Adjust them until the total is exactly 100%.";
-        status.classList.add("error");
-      } else {
-        status.textContent = "Perfect! Your allocation totals 100%.";
-        status.classList.add("success");
-      }
-
-      let allocated = 0;
-
-      categories.forEach((item, index) => {
-        const valid = !invalidIncome && !invalidPercent &&
-          Math.abs(percentTotal - 100) <= 0.000001;
-        const amount = valid ? income * percentages[index] / 100 : 0;
-
-        allocated += amount;
-        document.getElementById(item.amount).textContent = money(amount);
-        document.getElementById(item.bar).style.width =
-          Math.min(100, Math.max(0, percentages[index])) + "%";
-      });
-
-      document.getElementById("allocatedTotal").textContent =
-        money(allocated);
-      document.getElementById("summaryAllocated").textContent =
-        money(allocated);
-      document.getElementById("remaining").textContent =
-        money(income - allocated);
-    }
-
-    [...incomeIds, ...categories.map(item => item.pct)].forEach(id => {
-      document.getElementById(id).addEventListener("input", calculate);
+      const action = document.createElement("td");
+      action.className = "noprint";
+      const btn = document.createElement("button");
+      btn.className = "secondary";
+      btn.textContent = "Edit";
+      btn.type = "button";
+      btn.addEventListener("click", () => editRecord(r.id));
+      action.appendChild(btn);
+      tr.appendChild(action);
+      $("history").appendChild(tr);
     });
+  }
+}
 
-    document.getElementById("reset").addEventListener("click", () => {
-      incomeIds.forEach(id => document.getElementById(id).value = 0);
-      document.getElementById("allahPct").value = 33.33;
-      document.getElementById("businessPct").value = 33.33;
-      document.getElementById("familyPct").value = 33.34;
-      calculate();
-    });
+function setSyncStatus(message, error = false) {
+  $("syncStatus").className = "status " + (error ? "bad" : "good");
+  $("syncStatus").textContent = message;
+}
 
-    calculate();
-  </script>
+function syncRecord(record) {
+  if (!SHEETS_URL.startsWith("https://script.google.com/")) {
+    setSyncStatus("Add your Apps Script Web app URL in the code first.", true);
+    return;
+  }
+
+  if (!validPercentages()) {
+    setSyncStatus("Fix allocation percentages so they total 100% before syncing.", true);
+    return;
+  }
+
+  const p = percentages();
+  const payload = {
+    action: "save",
+    id: record.id,
+    date: record.date,
+    type: record.type,
+    bank: record.bank,
+    amount: Number(record.amount),
+    allahPct: p[0],
+    businessPct: p[1],
+    familyPct: p[2]
+  };
+
+  // no-cors avoids browser preflight restrictions for this simple POST.
+  // The browser cannot read the response, so this is not a confirmed receipt.
+  fetch(SHEETS_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {"Content-Type": "text/plain;charset=utf-8"},
+    body: JSON.stringify(payload)
+  }).then(() => {
+    setSyncStatus("Sync request sent for " + record.date +
+      ". Check Google Sheets to confirm the row was added or updated.");
+  }).catch(() => {
+    setSyncStatus("Could not send the sync request. Check your URL and internet connection.", true);
+  });
+}
+
+function syncAll() {
+  if (!validPercentages()) {
+    setSyncStatus("Set percentages that total 100% before syncing.", true);
+    return;
+  }
+  if (!records.length) {
+    setSyncStatus("There are no income records to sync.", true);
+    return;
+  }
+  setSyncStatus("Sending records to Google Sheets...");
+  records.forEach(syncRecord);
+}
+
+$("incomeForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const amount = Number($("incomeAmount").value);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    setSyncStatus("Enter an income amount greater than zero.", true);
+    return;
+  }
+
+  const record = {
+    id: editingId || (crypto.randomUUID
+      ? crypto.randomUUID()
+      : Date.now() + "-" + Math.random().toString(36).slice(2)),
+    date: $("incomeDate").value,
+    type: $("incomeType").value,
+    bank: $("bankAccount").value,
+    amount: amount
+  };
+
+  if (!record.date) {
+    setSyncStatus("Please select the income date.", true);
+    return;
+  }
+
+  if (editingId) {
+    records = records.map(r => r.id === editingId ? record : r);
+  } else {
+    records.push(record);
+  }
+
+  saveLocal();
+  render();
+  syncRecord(record);
+  resetForm();
+});
+
+function editRecord(id) {
+  const record = records.find(r => r.id === id);
+  if (!record) return;
+  editingId = id;
+  $("incomeDate").value = record.date;
+  $("incomeType").value = record.type;
+  $("bankAccount").value = record.bank;
+  $("incomeAmount").value = record.amount;
+  $("saveBtn").textContent = "Update Income";
+  $("cancelEdit").hidden = false;
+  $("incomeDate").focus();
+}
+
+function resetForm() {
+  editingId = null;
+  $("incomeForm").reset();
+  $("incomeDate").value = new Date().toLocaleDateString("en-CA");
+  $("saveBtn").textContent = "Add Income";
+  $("cancelEdit").hidden = true;
+}
+
+$("cancelEdit").addEventListener("click", resetForm);
+$("syncAll").addEventListener("click", syncAll);
+
+$("resetAll").addEventListener("click", () => {
+  if (!confirm("Clear all income records stored in this browser? Google Sheet rows will not be deleted.")) return;
+  records = [];
+  saveLocal();
+  resetForm();
+  render();
+  setSyncStatus("Browser records cleared. Existing Google Sheet rows remain unchanged.");
+});
+
+["allahPct", "businessPct", "familyPct"].forEach(id => {
+  $(id).addEventListener("input", render);
+});
+
+$("incomeDate").value = new Date().toLocaleDateString("en-CA");
+render();
+</script>
 </body>
 </html>
